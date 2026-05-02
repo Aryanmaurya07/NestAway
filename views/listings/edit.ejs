@@ -1,0 +1,112 @@
+<!-- NestAway — Edit Listing Form (views/listings/edit.ejs) -->
+
+<div class="container" style="padding:3rem 1rem 5rem;">
+  <div style="max-width:640px;margin:0 auto;">
+
+    <!-- Page header -->
+    <div class="reveal" style="margin-bottom:2rem;">
+      <a href="/listings/<%= listing._id %>" style="color:var(--text-muted);font-size:0.85rem;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;margin-bottom:1.2rem;">
+        <i class="bi bi-arrow-left"></i> Back to listing
+      </a>
+      <p class="section-label">Edit Your Stay</p>
+      <h1 class="page-title">Update Listing</h1>
+      <p style="color:var(--text-muted);font-size:0.9rem;">Make changes to your property details below.</p>
+    </div>
+
+    <div class="form-wrapper reveal" style="max-width:100%;">
+      <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" enctype="multipart/form-data" novalidate>
+
+        <!-- Title -->
+        <div class="mb-4">
+          <label class="form-label" for="title">
+            <i class="bi bi-house me-1"></i>Property Title
+          </label>
+          <input type="text" class="form-control" id="title" name="listing[title]"
+                 value="<%= listing.title %>" required>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-4">
+          <label class="form-label" for="description">
+            <i class="bi bi-card-text me-1"></i>Description
+          </label>
+          <textarea class="form-control" id="description" name="listing[description]"
+                    rows="4"><%= listing.description %></textarea>
+        </div>
+
+        <!-- Current Image + Upload new -->
+        <div class="mb-4">
+          <label class="form-label">
+            <i class="bi bi-image me-1"></i>Property Image
+          </label>
+          <% if(listing.image && listing.image.url) { %>
+            <div style="margin-bottom:0.75rem;">
+              <img src="<%= listing.image.url %>" alt="Current image"
+                   style="width:100%;height:180px;object-fit:cover;border-radius:var(--radius-md);border:1px solid var(--border);">
+              <p style="color:var(--text-muted);font-size:0.8rem;margin-top:0.4rem;">Current image. Upload below to replace.</p>
+            </div>
+          <% } %>
+          <input type="file" class="form-control" name="listing[image]"
+                 accept="image/*" onchange="previewImage(this)">
+          <div id="imgPreview" style="display:none;margin-top:0.75rem;">
+            <img id="previewEl" src="" alt="New preview"
+                 style="width:100%;height:200px;object-fit:cover;border-radius:var(--radius-md);border:1px solid var(--border-gold);">
+          </div>
+        </div>
+
+        <!-- Price -->
+        <div class="mb-4">
+          <label class="form-label" for="price">
+            <i class="bi bi-currency-rupee me-1"></i>Price per Night (₹)
+          </label>
+          <input type="number" class="form-control" id="price" name="listing[price]"
+                 value="<%= listing.price %>" min="0" required>
+        </div>
+
+        <!-- Location & Country -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-7">
+            <label class="form-label" for="location">
+              <i class="bi bi-geo-alt me-1"></i>City / Location
+            </label>
+            <input type="text" class="form-control" id="location" name="listing[location]"
+                   value="<%= listing.location %>" required>
+          </div>
+          <div class="col-md-5">
+            <label class="form-label" for="country">
+              <i class="bi bi-globe me-1"></i>Country
+            </label>
+            <input type="text" class="form-control" id="country" name="listing[country]"
+                   value="<%= listing.country %>" required>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-primary w-100" style="padding:0.9rem;font-size:1rem;">
+          <i class="bi bi-check-circle me-2"></i>Save Changes
+        </button>
+
+        <a href="/listings/<%= listing._id %>" class="btn btn-dark w-100 mt-2">
+          Cancel
+        </a>
+
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function previewImage(input) {
+    const preview = document.getElementById('imgPreview');
+    const img = document.getElementById('previewEl');
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        img.src = e.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+</script>

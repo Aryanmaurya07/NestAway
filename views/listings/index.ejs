@@ -1,0 +1,217 @@
+<!-- NestAway — Listings Index Page -->
+
+<!-- ─── Hero Section ──────────────────────────────── -->
+<section class="nestaway-hero">
+  <div class="container">
+    <p class="section-label reveal">✦ Premium Stays Worldwide</p>
+    <h1 class="hero-headline reveal">Find where<br>you truly belong.</h1>
+    <p class="hero-subline reveal">
+      Discover handpicked homes, cabins, villas, and unique stays — curated for the discerning traveller.
+    </p>
+
+    <!-- Search bar -->
+    <div class="search-bar reveal">
+      <i class="bi bi-search" style="color:var(--text-muted);"></i>
+      <input type="text" id="searchInput" placeholder="Destination, city, or property name…" autocomplete="off">
+      <button class="search-btn" onclick="filterListings()">
+        <i class="bi bi-search me-1"></i>Search
+      </button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row reveal">
+      <div class="stat-item">
+        <div class="stat-number">2.4K+</div>
+        <div class="stat-label">Listings</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">140+</div>
+        <div class="stat-label">Countries</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">98%</div>
+        <div class="stat-label">Satisfaction</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Filter Pills ──────────────────────────────── -->
+<div class="container">
+  <div class="filter-row" id="filterRow">
+    <button class="filter-pill active" onclick="filterCategory(this, 'all')">
+      <i class="bi bi-grid-fill"></i> All Stays
+    </button>
+    <button class="filter-pill" onclick="filterCategory(this, 'trending')">
+      <i class="bi bi-fire"></i> Trending
+    </button>
+    <button class="filter-pill" onclick="filterCategory(this, 'beach')">
+      <i class="bi bi-umbrella-fill"></i> Beach
+    </button>
+    <button class="filter-pill" onclick="filterCategory(this, 'mountains')">
+      <i class="bi bi-mountains"></i> Mountains
+    </button>
+    <button class="filter-pill" onclick="filterCategory(this, 'city')">
+      <i class="bi bi-buildings"></i> City
+    </button>
+    <button class="filter-pill" onclick="filterCategory(this, 'cabin')">
+      <i class="bi bi-house-heart"></i> Cabins
+    </button>
+    <button class="filter-pill" onclick="filterCategory(this, 'luxury')">
+      <i class="bi bi-gem"></i> Luxury
+    </button>
+    <button class="filter-pill" onclick="filterCategory(this, 'countryside')">
+      <i class="bi bi-tree"></i> Countryside
+    </button>
+  </div>
+</div>
+
+<!-- ─── Listings Grid ─────────────────────────────── -->
+<div class="container mb-5">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <p class="section-label">Our Collection</p>
+      <h2 class="section-title">Available Stays</h2>
+    </div>
+    <span style="color:var(--text-muted);font-family:'Sora',sans-serif;font-size:0.85rem;">
+      <%= allListings.length %> properties
+    </span>
+  </div>
+
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 reveal-stagger" id="listingsGrid">
+    <% for(let listing of allListings) { %>
+      <div class="col listing-col" data-title="<%= listing.title.toLowerCase() %>" data-location="<%= listing.location ? listing.location.toLowerCase() : '' %>">
+        <a href="/listings/<%= listing._id %>" class="text-decoration-none">
+          <div class="card h-100">
+
+            <!-- Image -->
+            <div class="listing-img-wrapper">
+              <% if(listing.image && listing.image.url) { %>
+                <img src="<%= listing.image.url %>"
+                     class="card-img-top"
+                     alt="<%= listing.title %>"
+                     loading="lazy"
+                     onerror="this.src='https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&q=80'">
+              <% } else { %>
+                <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&q=80"
+                     class="card-img-top"
+                     alt="<%= listing.title %>"
+                     loading="lazy">
+              <% } %>
+              <div class="img-overlay"></div>
+
+              <!-- Wishlist heart -->
+              <button class="wishlist-btn"
+                      onclick="event.preventDefault(); toggleWishlist(this)"
+                      title="Save to wishlist"
+                      style="
+                        position:absolute;top:12px;right:12px;
+                        background:rgba(8,8,15,0.55);
+                        border:1px solid rgba(255,255,255,0.12);
+                        border-radius:50%;width:34px;height:34px;
+                        display:flex;align-items:center;justify-content:center;
+                        cursor:pointer;transition:all 0.3s ease;
+                        backdrop-filter:blur(8px);color:var(--text-secondary);
+                        font-size:0.9rem;
+                      ">
+                <i class="bi bi-heart"></i>
+              </button>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title"><%= listing.title %></h5>
+              <% if(listing.location) { %>
+                <p class="card-text" style="font-size:0.82rem;margin-bottom:0.6rem;">
+                  <i class="bi bi-geo-alt me-1" style="color:var(--gold);"></i><%= listing.location %><% if(listing.country) { %>, <%= listing.country %><% } %>
+                </p>
+              <% } %>
+              <div class="mt-auto pt-2 d-flex align-items-center justify-content-between" style="border-top:1px solid var(--border);">
+                <div class="listing-price">
+                  ₹<%= listing.price ? listing.price.toLocaleString('en-IN') : '—' %>
+                  <span>/ night</span>
+                </div>
+                <div class="stars">★★★★<span style="opacity:0.4;">★</span></div>
+              </div>
+            </div>
+
+          </div>
+        </a>
+      </div>
+    <% } %>
+  </div>
+
+  <!-- Empty state -->
+  <div id="emptyState" style="display:none;text-align:center;padding:4rem 2rem;">
+    <div style="font-size:3rem;margin-bottom:1rem;">🔍</div>
+    <h4 style="color:var(--text-secondary);font-family:'Sora',sans-serif;">No stays found</h4>
+    <p style="color:var(--text-muted);">Try a different search term or explore all stays.</p>
+    <button class="btn btn-outline-primary mt-2" onclick="clearSearch()">Clear search</button>
+  </div>
+</div>
+
+<style>
+  /* Wishlist button hover */
+  .wishlist-btn:hover {
+    background: rgba(201,168,76,0.2) !important;
+    border-color: rgba(201,168,76,0.5) !important;
+    color: var(--gold) !important;
+    transform: scale(1.1);
+  }
+  .wishlist-btn.saved {
+    background: rgba(201,168,76,0.15) !important;
+    border-color: var(--gold) !important;
+    color: var(--gold) !important;
+  }
+</style>
+
+<script>
+  // ── Live search ───────────────────────────────────
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('input', filterListings);
+
+  function filterListings() {
+    const q = searchInput.value.toLowerCase().trim();
+    const cols = document.querySelectorAll('.listing-col');
+    let visible = 0;
+    cols.forEach(col => {
+      const title = col.dataset.title || '';
+      const loc   = col.dataset.location || '';
+      const match = !q || title.includes(q) || loc.includes(q);
+      col.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  function clearSearch() {
+    searchInput.value = '';
+    filterListings();
+  }
+
+  // ── Category filter ───────────────────────────────
+  function filterCategory(btn, category) {
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    // In a real app, this would hit the server. For now just animate:
+    const grid = document.getElementById('listingsGrid');
+    grid.style.opacity = '0';
+    grid.style.transform = 'translateY(10px)';
+    setTimeout(() => {
+      grid.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      grid.style.opacity = '1';
+      grid.style.transform = 'translateY(0)';
+    }, 300);
+  }
+
+  // ── Wishlist toggle ───────────────────────────────
+  function toggleWishlist(btn) {
+    btn.classList.toggle('saved');
+    const icon = btn.querySelector('i');
+    if (btn.classList.contains('saved')) {
+      icon.className = 'bi bi-heart-fill';
+    } else {
+      icon.className = 'bi bi-heart';
+    }
+  }
+</script>
