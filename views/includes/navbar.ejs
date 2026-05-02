@@ -1,68 +1,51 @@
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass"></i></a>
-        <div class="navbar-nav web-title">
-           <a class="nav-link" id="web-title" href="/listings"><b>NestAway</b></a>
+<nav class="navbar navbar-expand-md sticky-top">
+  <div class="container-fluid px-4">
+
+    <!-- Brand -->
+    <a class="navbar-brand" href="/listings">
+      <div class="brand-icon">
+        <i class="fa-regular fa-compass"></i>
+      </div>
+      Nest<span class="brand-accent">Away</span>
+    </a>
+
+    <!-- Mobile toggler -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Collapse -->
+    <div class="collapse navbar-collapse" id="mainNav">
+
+      <!-- Center search -->
+      <form class="d-flex mx-auto navbar-search-form" role="search" action="/listings/search" method="get">
+        <div class="navbar-search-wrap">
+          <i class="fa-solid fa-magnifying-glass navbar-search-icon"></i>
+          <input class="navbar-search-input" type="search" placeholder="Search location, title…" aria-label="Search" name="q" />
+          <button class="navbar-search-btn" type="submit">Search</button>
         </div>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="nav-search nav-hovernav-search-search">
-                <form class="d-flex" role="search" action="/listings/search" method="get" id="searchBox">
-                    <input class="form-control me-2 search-inp" type="search"
-                        placeholder="Search Location | Title | Price" aria-label="Search" name="q" id="mySearchInput" />
-                    <button class="btn search-btn" type="submit" id="search">
-                        <i class="fa-solid fa-magnifying-glass"></i>Search
-                    </button>
-                </form>
-            </div>
-            <div class="navbar-nav">
-                <div class="dropdown">
-                    <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        <i class="fa-solid fa-circle-user"></i>&nbsp;&nbsp;&nbsp;
-                    </button>
-                    <ul class="dropdown-menu">
-                        <% if(!currUser) { %>
-                            <a class="nav-link" href="/signup"><i class="fa-solid fa-user-plus"></i>&nbsp; &nbsp;<b>Sign
-                                    up</b></a>
-                            <a class="nav-link" href="/login"><b><i class="fa-solid fa-user-check"></i>&nbsp; &nbsp;Log
-                                    in</b></a>
-                            <% } %>
-                                <% if(currUser) { %>
-                                    <h6 class="mt-1 nav-link"><b><i class="fa-solid fa-user"></i>
-                                            &nbsp; &nbsp;<%= currUser.username%>
-                                        </b></h6>
-                                    <a class="nav-link" href="/logout"><b><i
-                                                class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp; &nbsp;Log
-                                            out</b></a>
-                                    <% } %>
-                                        <hr />
-                                        <a class="nav-link" href="/listings/new"><strong><i
-                                                    class="fa-solid fa-circle-plus"></i>&nbsp; &nbsp;List your
-                                                home</strong></a>
-                    </ul>
-                </div>
-                <div id="responsive-registration">
-                    <% if(!currUser) { %>
-                        <a class="nav-link" href="/signup"><i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;<b>Sign
-                                up</b></a>
-                        <a class="nav-link" href="/login"><i class="fa-solid fa-user-check"></i>&nbsp;&nbsp;<b>Log
-                                in</b></a>
-                        <% } %>
-                            <% if(currUser) { %>
-                                <h6 class="mt-1 nav-link"><b><i class="fa-solid fa-user"></i>
-                                        &nbsp; &nbsp;<%= currUser.username%>
-                                    </b></h6>
-                                <a class="nav-link" href="/logout"><i
-                                        class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp;<b>Log out</b></a>
-                                <% } %>
-                                    <a class="nav-link" href="/listings/new"><i
-                                            class="fa-solid fa-circle-plus"></i>&nbsp; &nbsp;<strong>Airbnb your
-                                            home</strong></a>
-                </div>
-            </div>
-        </div>
+      </form>
+
+      <!-- Right nav -->
+      <div class="navbar-nav ms-auto align-items-center gap-2">
+        <% if(!currUser) { %>
+          <a class="nav-link" href="/login"><i class="fa-solid fa-user-check me-1"></i>Log in</a>
+          <a class="btn btn-primary" href="/signup">Sign up</a>
+        <% } else { %>
+          <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-circle-user"></i>
+              <span><%= currUser.username %></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/listings/new"><i class="fa-solid fa-circle-plus me-2"></i>List your home</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/logout"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Log out</a></li>
+            </ul>
+          </div>
+        <% } %>
+      </div>
+
     </div>
+  </div>
 </nav>

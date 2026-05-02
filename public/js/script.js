@@ -1,65 +1,63 @@
+/* ============================================================
+   NestAway — Main Script
+   ============================================================ */
+
+// ── Bootstrap form validation ─────────────────────────────
 (() => {
   "use strict";
   const forms = document.querySelectorAll(".needs-validation");
   Array.from(forms).forEach((form) => {
-    form.addEventListener(
-      "submit",
-      (event) => {
-        if (!form.checkValidity()) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-
-        form.classList.add("was-validated");
-      },
-      false
-    );
+    form.addEventListener("submit", (event) => {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      form.classList.add("was-validated");
+    }, false);
   });
 })();
 
-let taxSwitch = document.getElementById("flexSwitchCheckDefault");
-taxSwitch.addEventListener("click", () => {
-  let taxInfo = document.getElementsByClassName("tax-info");
-  for (info of taxInfo) {
-    if (info.style.display != "inline") {
-      info.style.display = "inline";
+// ── Navbar scroll effect ──────────────────────────────────
+const navbar = document.querySelector('.navbar');
+if (navbar) {
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 20) {
+      navbar.classList.add('scrolled');
     } else {
-      info.style.display = "none";
+      navbar.classList.remove('scrolled');
     }
-  }
-});
+  });
+}
 
+// ── Reveal on scroll (IntersectionObserver) ───────────────
+// This makes .reveal and .reveal-stagger elements animate in
+// WITHOUT this, everything stays at opacity:0 and is invisible!
 document.addEventListener("DOMContentLoaded", function () {
-  const leftBtn = document.querySelector(".left-btn");
-  const rightBtn = document.querySelector(".right-btn");
-  const filtersContainer = document.getElementById("filters-container");
-  const filters = document.getElementById("filters");
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target); // animate once
+        }
+      });
+    },
+    { threshold: 0.08 }
+  );
 
-  const filterWidth = document.querySelector(".filter").offsetWidth + 32;
+  // Observe all .reveal elements
+  document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
 
-  leftBtn.addEventListener("click", function () {
-    filtersContainer.scrollLeft -= filterWidth;
-  });
+  // Observe all .reveal-stagger elements
+  document.querySelectorAll(".reveal-stagger").forEach((el) => observer.observe(el));
 
-  rightBtn.addEventListener("click", function () {
-    filtersContainer.scrollLeft += filterWidth;
-  });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  const container = document.getElementById("filters-container");
-
-  let startX;
-  let scrollLeft;
-
-  container.addEventListener("touchstart", (e) => {
-    startX = e.touches[0].pageX;
-    scrollLeft = container.scrollLeft;
-  });
-
-  container.addEventListener("touchmove", (e) => {
-    const x = e.touches[0].pageX;
-    const walk = startX - x;
-    container.scrollLeft = scrollLeft + walk;
-  });
+  // Also immediately make visible anything already in viewport on load
+  setTimeout(() => {
+    document.querySelectorAll(".reveal, .reveal-stagger").forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight) {
+        el.classList.add("visible");
+      }
+    });
+  }, 100);
 });
