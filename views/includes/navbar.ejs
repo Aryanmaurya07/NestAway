@@ -10,7 +10,8 @@
     </a>
 
     <!-- Mobile toggler -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+            aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -28,24 +29,45 @@
 
       <!-- Right nav -->
       <div class="navbar-nav ms-auto align-items-center gap-2">
+
         <% if(!currUser) { %>
+          <!-- Not logged in -->
           <a class="nav-link" href="/login"><i class="fa-solid fa-user-check me-1"></i>Log in</a>
-          <a class="btn btn-primary" href="/signup">Sign up</a>
+          <a class="btn btn-primary" href="/signup"><i class="fa-solid fa-user-plus me-1"></i>Sign up</a>
         <% } else { %>
+          <!-- Logged in: dropdown with username -->
           <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-primary dropdown-toggle d-flex align-items-center gap-2"
+                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="fa-solid fa-circle-user"></i>
-              <span><%= currUser.username %></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="/listings/new"><i class="fa-solid fa-circle-plus me-2"></i>List your home</a></li>
+              <!-- Username (non-clickable display) -->
+              <li>
+                <span class="dropdown-item-text d-flex align-items-center gap-2" style="color:var(--text-primary);font-family:'Sora',sans-serif;font-weight:600;padding:0.6rem 1rem;">
+                  <i class="fa-solid fa-user" style="color:var(--gold);"></i>
+                  <%= currUser.username %>
+                </span>
+              </li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="/logout"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Log out</a></li>
+              <!-- Log out -->
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2" href="/logout">
+                  <i class="fa-solid fa-arrow-right-from-bracket"></i> Log out
+                </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <!-- List your home -->
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2" href="/listings/new">
+                  <i class="fa-solid fa-circle-plus" style="color:var(--gold);"></i> List your home
+                </a>
+              </li>
             </ul>
           </div>
         <% } %>
-      </div>
 
+      </div>
     </div>
   </div>
 </nav>
