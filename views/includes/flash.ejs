@@ -1,28 +1,46 @@
 <% if(success && success.length){ %>
-  <div class="alert nestaway-alert nestaway-alert-success alert-dismissible fade show" role="alert" id="flashSuccess">
-    <i class="bi bi-check-circle-fill me-2"></i><%= success %>
-    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+  <div class="alert nestaway-alert nestaway-alert-success alert-dismissible fade show"
+       role="alert" id="flashSuccess">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    <span><%= success %></span>
+    <button type="button" class="btn-close btn-close-white ms-auto"
+            onclick="dismissFlash('flashSuccess')" aria-label="Close"></button>
   </div>
 <% } %>
 
 <% if(error && error.length){ %>
-  <div class="alert nestaway-alert nestaway-alert-danger alert-dismissible fade show" role="alert" id="flashError">
-    <i class="bi bi-exclamation-triangle-fill me-2"></i><%= error %>
-    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+  <div class="alert nestaway-alert nestaway-alert-danger alert-dismissible fade show"
+       role="alert" id="flashError">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <span><%= error %></span>
+    <button type="button" class="btn-close btn-close-white ms-auto"
+            onclick="dismissFlash('flashError')" aria-label="Close"></button>
   </div>
 <% } %>
 
 <script>
-  // Auto-dismiss flash messages after 4 seconds
-  document.addEventListener('DOMContentLoaded', function() {
-    ['flashSuccess', 'flashError'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) {
-        setTimeout(function() {
-          var bsAlert = bootstrap.Alert.getOrCreateInstance(el);
-          bsAlert.close();
-        }, 4000);
-      }
-    });
-  });
+  function dismissFlash(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('show');
+    setTimeout(function() { el.remove(); }, 300);
+  }
+
+  // Auto-dismiss after 4 seconds — no dependency on bootstrap global
+  (function() {
+    function autoDismiss() {
+      ['flashSuccess', 'flashError'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+          setTimeout(function() { dismissFlash(id); }, 4000);
+        }
+      });
+    }
+    // Run after page loads
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', autoDismiss);
+    } else {
+      autoDismiss();
+    }
+  })();
 </script>

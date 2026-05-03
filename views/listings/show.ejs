@@ -222,9 +222,10 @@
 
         <!-- Reserve button -->
         <% if(currUser) { %>
-          <button class="btn btn-primary w-100" style="padding:0.9rem;font-size:1rem;">
+          <a href="/listings/<%= listing._id %>/reservelisting"
+             class="btn btn-primary w-100" style="padding:0.9rem;font-size:1rem;">
             <i class="bi bi-calendar2-check me-2"></i>Reserve Now
-          </button>
+          </a>
           <p style="text-align:center;font-size:0.78rem;color:var(--text-muted);margin-top:0.6rem;">You won't be charged yet</p>
         <% } else { %>
           <a href="/login" class="btn btn-primary w-100" style="padding:0.9rem;font-size:1rem;">
@@ -278,4 +279,49 @@
       alert('Link copied to clipboard!');
     }
   }
+</script>
+
+<script>
+  // ── Map Initialisation ─────────────────────────────
+  (function() {
+    var mapEl = document.getElementById('map');
+    if (!mapEl) return;
+
+    // Safe boolean from EJS (prevents JS break)
+    var hasCoords = <%= listing.geometry && listing.geometry.coordinates && listing.geometry.coordinates.length === 2 %>;
+
+    if (hasCoords) {
+
+      // Safe injection (prevents "Expression expected" error)
+      var coords = <%- JSON.stringify(listing.geometry.coordinates || []) %>; // [lng, lat]
+      var title  = <%- JSON.stringify(listing.title || "") %>;
+
+      var map = L.map('map', { zoomControl: true, scrollWheelZoom: false })
+                 .setView([coords[1], coords[0]], 10);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 19
+      }).addTo(map);
+
+      var greenIcon = L.divIcon({
+        className: '',
+        html: '<div style="width:14px;height:14px;border-radius:50%;background:#33c375;border:3px solid #fff;box-shadow:0 0 10px rgba(51,195,117,0.7);"></div>',
+        iconSize: [14, 14],
+        iconAnchor: [7, 7],
+        popupAnchor: [0, -12]
+      });
+
+      L.marker([coords[1], coords[0]], { icon: greenIcon })
+       .addTo(map)
+       .bindPopup('<b>' + title + '</b><br><small style="color:#888;">Exact location after booking</small>')
+       .openPopup();
+
+    } else {
+
+      // fallback (same UI, just safer string)
+      mapEl.innerHTML = '<div style="height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg-card);border-radius:var(--radius-md);color:var(--text-muted);font-family:Sora,sans-serif;font-size:.9rem;gap:.5rem;"><i class="bi bi-geo-alt"></i> Location not available</div>';
+
+    }
+  })();
 </script>

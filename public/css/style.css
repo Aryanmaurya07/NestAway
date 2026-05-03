@@ -55,7 +55,7 @@ body {
   font-size: 15px;
   line-height: 1.7;
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -1012,4 +1012,46 @@ main, .container-main {
 body > .nestaway-hero,
 .nestaway-hero {
   width: 100%;
+}
+
+/* ── Dropdown fix: ensure shows above all content ─── */
+.navbar { overflow: visible !important; }
+.navbar-collapse { overflow: visible !important; }
+.dropdown { position: static; }
+.dropdown-menu {
+  z-index: 9999 !important;
+  position: absolute !important;
+  min-width: 200px;
+}
+
+/* ── Filter scroll wrapper ───────────────────────── */
+.filter-scroll-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.filter-scroll-btn {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-size: 1rem;
+}
+.filter-scroll-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--gold-dim);
+}
+.filter-scroll-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
 }
